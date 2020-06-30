@@ -15,14 +15,18 @@ class LetterCell: UICollectionViewCell {
 
     struct ViewModel {
         var title: String
-        var isSelected: Bool
         var tag: Int
     }
 
     func configure(viewModel: ViewModel) {
         titleLabel.text = viewModel.title
-        titleLabel.textColor = viewModel.isSelected ? .letterSelected : .letterNotSelected
-        image.image = viewModel.isSelected ? UIImage(named: "icOn") : UIImage(named: "icOff")
+        titleLabel.textColor = .letterNotSelected
+        image.image = UIImage(named: "icOff")
         tag = viewModel.tag
+    }
+    
+    func setSelected(_ isSelected: Bool) {
+        titleLabel.textColor = isSelected ? .letterSelected : .letterNotSelected
+        image.image = isSelected ? UIImage(named: "icOn") : UIImage(named: "icOff")
     }
 }

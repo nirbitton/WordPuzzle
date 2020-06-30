@@ -20,17 +20,37 @@ class GameViewController: UIViewController, Storyboarded {
     
     // MARK: - Private properties
     
-    private var selectedCells: [LetterCell] = []
+    private var selectedCells: [LetterCell] = [] {
+        didSet {
+            if selectedCells.count == 1 {
+                selectedLetterOne.text = selectedCells[0].titleLabel.text
+                selectedLetterTwo.text = ""
+                selectedLetterThree.text = ""
+                selectedLetterFour.text = ""
+            } else if selectedCells.count == 2 {
+                selectedLetterTwo.text = selectedCells[1].titleLabel.text
+                selectedLetterThree.text = ""
+                selectedLetterFour.text = ""
+            } else if selectedCells.count == 3 {
+                selectedLetterThree.text = selectedCells[2].titleLabel.text
+                selectedLetterFour.text = ""
+            } else if selectedCells.count == 4 {
+                selectedLetterFour.text = selectedCells[3].titleLabel.text
+            }
+        }
+    }
     var words: [String] = []
     var selectedWordPosition = 0
     private var currentWordAsCharacters: [Character] = []
+    var wordAsArray = Array<String>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(GameViewController.handleTap(_:)))
         longPressGesture.minimumPressDuration = 0.01
-        self.collectionView.addGestureRecognizer(longPressGesture)
+        collectionView.addGestureRecognizer(longPressGesture)
+        collectionView.delegate = self
     }
     
     @IBAction func handleTap(_ sender: UITapGestureRecognizer){
@@ -47,7 +67,7 @@ class GameViewController: UIViewController, Storyboarded {
             }
         case .ended:
 //            success()
-//            clearCells()
+            clearCells()
 //            
 //            isSameTry = false
             break
@@ -60,15 +80,24 @@ class GameViewController: UIViewController, Storyboarded {
     func handleCellSelection(cell: LetterCell) {
         if !selectedCells.contains(cell) {
             selectedCells.append(cell)
-            //            cell.backgroundColor = UIColor.midPurple()
-            //            cell.letter.textColor = UIColor.nOrangeColor()
+            cell.setSelected(true)
         } else if selectedCells.count > 1 &&
             cell.tag == selectedCells[selectedCells.endIndex-2].tag {
-            //                lastCell.backgroundColor = UIColor.lightPurple()
-            //                lastCell.letter.textColor = UIColor.darkPurple()
-            
+            let lastCell = selectedCells[selectedCells.endIndex-1]
+            lastCell.setSelected(false)
             selectedCells.remove(at: selectedCells.endIndex-1)
         }
+    }
+    
+    func clearCells(){
+        selectedCells.forEach { cell in
+            cell.setSelected(false)
+        }
+        selectedCells.removeAll()
+        selectedLetterOne.text = ""
+        selectedLetterTwo.text = ""
+        selectedLetterThree.text = ""
+        selectedLetterFour.text = ""
     }
 }
 
@@ -79,14 +108,23 @@ extension GameViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LetterCell", for: indexPath) as! LetterCell
-        let randomIndex = Int(arc4random_uniform(UInt32(currentWordAsCharacters.count)))
-        
-        let selectedWord = words[selectedWordPosition]
-        var wordAsArray = Array(selectedWord)
+        if wordAsArray.isEmpty {
+            wordAsArray = words[selectedWordPosition].map { String($0) }
+        }
+        let randomIndex = Int(arc4random_uniform(UInt32(wordAsArray.count)))
         let letter = wordAsArray.remove(at: randomIndex)
-        cell.configure(viewModel: LetterCell.ViewModel(title: letter.description, isSelected: false, tag: indexPath.row))
+        cell.configure(viewModel: LetterCell.ViewModel(title: letter.description, tag: indexPath.row))
         
         return cell
         
+    }
+}
+
+extension GameViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            let itemWidth = (collectionView.bounds.width / CGFloat(2)) - 10
+            let itemHeight = collectionView.bounds.height / CGFloat(2)
+
+        return CGSize(width: itemWidth, height: itemHeight)
     }
 }
