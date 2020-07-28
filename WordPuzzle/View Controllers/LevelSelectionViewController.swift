@@ -18,15 +18,24 @@ class LevelSelectionViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupBackButton()
+    }
+    
+    private func setupBackButton() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     @IBAction func easyLevelAction(_ sender: Any) {
+        DBManager.saveLevel(level: GameModel.Level.easy.rawValue)
         delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
     }
     @IBAction func mediumLevelAction(_ sender: Any) {
+        DBManager.saveLevel(level: GameModel.Level.medium.rawValue)
         delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
     }
     @IBAction func hardLevelAction(_ sender: Any) {
+        DBManager.saveLevel(level: GameModel.Level.hard.rawValue)
         delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
     }
 }

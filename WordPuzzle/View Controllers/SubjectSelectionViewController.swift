@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SubjectSelectionViewControllerDelegate: class {
-    func subjectSelectionViewController(viewController: SubjectSelectionViewController, didSelectSubject subject: GameModel.SubjectType)
+    func subjectSelectionViewController(viewController: SubjectSelectionViewController, didSelectSubject subjectPosition: GameModel.SubjectType)
 }
 
 class SubjectSelectionViewController: UIViewController, Storyboarded {
@@ -22,8 +22,20 @@ class SubjectSelectionViewController: UIViewController, Storyboarded {
         super.viewDidLoad()
 
         setUpTableView()
+        setupBackButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
     }
 
+    private func setupBackButton() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
     private func setUpTableView() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -39,7 +51,7 @@ extension SubjectSelectionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell() as SubjectSelectCell
         let subject = gameModel?.allSubjects[indexPath.row]
-        cell.configure(viewModel: SubjectSelectCell.ViewModel(title: subject?.name, icon: subject?.icon))
+        cell.configure(viewModel: SubjectSelectCell.ViewModel(title: subject?.name, icon: subject?.icon, isLocked: DBManager.getSavedLevel() < indexPath.row))
         
         return cell
     }
@@ -47,7 +59,6 @@ extension SubjectSelectionViewController: UITableViewDataSource {
 
 extension SubjectSelectionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DBManager.saveLevel(level: indexPath.row)
         delegate?.subjectSelectionViewController(viewController: self, didSelectSubject: GameModel.SubjectType.all[indexPath.row])
     }
 }

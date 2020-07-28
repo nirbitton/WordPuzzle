@@ -45,14 +45,15 @@ class GameCoordinator: Coordinator {
         let wordSelectionViewController = WordSelectionViewController.instantiate()
         wordSelectionViewController.delegate = self
         wordSelectionViewController.gameModel = gameModel
-        navigationController.pushViewController(wordSelectionViewController, animated: true)
+        navigationController.pushViewController(wordSelectionViewController, animated: false)
     }
     
-    func showGameViewController() {
+    func showGameViewController(_ wordPosition: Int) {
         let gameViewController = GameViewController.instantiate()
-        gameViewController.selectedWordPosition = DBManager.getSavedWord()
-        gameViewController.words = gameModel.words[DBManager.getSavedLevel()]
-        navigationController.pushViewController(gameViewController, animated: true)
+        gameViewController.selectedWordPosition = wordPosition
+        gameViewController.words = gameModel.words[DBManager.savedSubject()]
+        gameViewController.gameModel = gameModel
+        navigationController.pushViewController(gameViewController, animated: false)
     }
 }
 
@@ -79,7 +80,7 @@ extension GameCoordinator: SubjectSelectionViewControllerDelegate {
 }
 
 extension GameCoordinator: WordSelectionViewControllerDelegate {
-    func wordSelectionViewController(viewController: WordSelectionViewController, didSelectWord word: String) {
-        showGameViewController()
+    func wordSelectionViewController(viewController: WordSelectionViewController, didSelectWord wordPosition: Int) {
+        showGameViewController(wordPosition)
     }
 }

@@ -9,11 +9,11 @@
 import Foundation
 
 class GameModel {
-    enum Level {
+    enum Level: Int {
         case easy, medium, hard
     }
     
-    enum SubjectType {
+    enum SubjectType: Int {
         case  animals, names, colors, food, humanBody, countries, bible, professions
         
         var name: String {
@@ -65,6 +65,7 @@ class GameModel {
     var subject: SubjectType = .animals
     var allSubjects = SubjectType.all
     var words = [[String]]()
+    var wordIcon = "icWordCell"
 
     init() {
         initWords()

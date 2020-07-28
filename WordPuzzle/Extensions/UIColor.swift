@@ -13,7 +13,7 @@ import UIKit
 extension UIColor {
     static let letterNotSelected = UIColor(named: "letterNotSelected")!
     static let letterSelected = UIColor(named: "letterSelected")!
-    static let accent2 = UIColor(named: "accent2")!
+    static let hintNumber = UIColor(named: "hintNumber")!
     static let accent2Light = UIColor(named: "accent2Light")!
     static let accent3 = UIColor(named: "accent3")!
     static let accent3Light = UIColor(named: "accent3Light")!

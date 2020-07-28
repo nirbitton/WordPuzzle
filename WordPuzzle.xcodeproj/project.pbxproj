@@ -31,6 +31,12 @@
 		3F8341D924A8914800DEE312 /* LetterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8341D824A8914800DEE312 /* LetterCell.swift */; };
 		3F8341DB24A8953900DEE312 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8341DA24A8953900DEE312 /* GameViewController.swift */; };
 		3F8341DD24A899FE00DEE312 /* WordSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8341DC24A899FE00DEE312 /* WordSelectionViewController.swift */; };
+		D716B71C24B1BCC1003EDA4D /* Popup.xib in Resources */ = {isa = PBXBuildFile; fileRef = D716B71B24B1BCC1003EDA4D /* Popup.xib */; };
+		D716B71E24C37D83003EDA4D /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D716B71D24C37D82003EDA4D /* UIView.swift */; };
+		D716B72024C37EA5003EDA4D /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D716B71F24C37EA5003EDA4D /* UIImageView.swift */; };
+		D746AE9524C8D2E9008B4B4F /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D746AE9424C8D2E9008B4B4F /* WordCell.swift */; };
+		D746AE9924CA1596008B4B4F /* Delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = D746AE9824CA1596008B4B4F /* Delay.swift */; };
+		D7659B1724AD1C5B00219819 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7659B1624AD1C5B00219819 /* Popup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +87,12 @@
 		3F8341D824A8914800DEE312 /* LetterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterCell.swift; sourceTree = "<group>"; };
 		3F8341DA24A8953900DEE312 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		3F8341DC24A899FE00DEE312 /* WordSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordSelectionViewController.swift; sourceTree = "<group>"; };
+		D716B71B24B1BCC1003EDA4D /* Popup.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Popup.xib; sourceTree = "<group>"; };
+		D716B71D24C37D82003EDA4D /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		D716B71F24C37EA5003EDA4D /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		D746AE9424C8D2E9008B4B4F /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
+		D746AE9824CA1596008B4B4F /* Delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delay.swift; sourceTree = "<group>"; };
+		D7659B1624AD1C5B00219819 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +182,9 @@
 			children = (
 				3F8341CE24A3368700DEE312 /* SubjectSelectCell.swift */,
 				3F8341D824A8914800DEE312 /* LetterCell.swift */,
+				D7659B1624AD1C5B00219819 /* Popup.swift */,
+				D716B71B24B1BCC1003EDA4D /* Popup.xib */,
+				D746AE9424C8D2E9008B4B4F /* WordCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -180,8 +195,8 @@
 				3F8341C024A21D5000DEE312 /* WelcomeViewController.swift */,
 				3F8341C224A21DB000DEE312 /* LevelSelectionViewController.swift */,
 				3F8341CC24A3344300DEE312 /* SubjectSelectionViewController.swift */,
-				3F8341DA24A8953900DEE312 /* GameViewController.swift */,
 				3F8341DC24A899FE00DEE312 /* WordSelectionViewController.swift */,
+				3F8341DA24A8953900DEE312 /* GameViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -192,6 +207,9 @@
 				3F8341D024A33D2400DEE312 /* UITableView.swift */,
 				3F8341D224A36C7500DEE312 /* UIColor.swift */,
 				3F8341D624A36F1400DEE312 /* UINavigationController.swift */,
+				D716B71D24C37D82003EDA4D /* UIView.swift */,
+				D716B71F24C37EA5003EDA4D /* UIImageView.swift */,
+				D746AE9824CA1596008B4B4F /* Delay.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -322,6 +340,7 @@
 			files = (
 				3F83419224A21A5300DEE312 /* LaunchScreen.storyboard in Resources */,
 				3F83418F24A21A5300DEE312 /* Assets.xcassets in Resources */,
+				D716B71C24B1BCC1003EDA4D /* Popup.xib in Resources */,
 				3F83418D24A21A4E00DEE312 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,13 +368,17 @@
 			files = (
 				3F8341BD24A21C9E00DEE312 /* GameCoordinator.swift in Sources */,
 				3F8341BB24A21C3500DEE312 /* AppCoordinator.swift in Sources */,
+				D7659B1724AD1C5B00219819 /* Popup.swift in Sources */,
 				3F8341D124A33D2400DEE312 /* UITableView.swift in Sources */,
 				3F8341C324A21DB000DEE312 /* LevelSelectionViewController.swift in Sources */,
 				3F8341DB24A8953900DEE312 /* GameViewController.swift in Sources */,
+				D716B72024C37EA5003EDA4D /* UIImageView.swift in Sources */,
 				3F8341D324A36C7500DEE312 /* UIColor.swift in Sources */,
 				3F83418A24A21A4E00DEE312 /* ViewController.swift in Sources */,
 				3F8341CD24A3344300DEE312 /* SubjectSelectionViewController.swift in Sources */,
 				3F83418624A21A4E00DEE312 /* AppDelegate.swift in Sources */,
+				D716B71E24C37D83003EDA4D /* UIView.swift in Sources */,
+				D746AE9524C8D2E9008B4B4F /* WordCell.swift in Sources */,
 				3F8341DD24A899FE00DEE312 /* WordSelectionViewController.swift in Sources */,
 				3F83418824A21A4E00DEE312 /* SceneDelegate.swift in Sources */,
 				3F8341D924A8914800DEE312 /* LetterCell.swift in Sources */,
@@ -364,6 +387,7 @@
 				3F8341C724A285CA00DEE312 /* Storyboarded.swift in Sources */,
 				3F8341C124A21D5000DEE312 /* WelcomeViewController.swift in Sources */,
 				3F8341C524A2859400DEE312 /* Coordinator.swift in Sources */,
+				D746AE9924CA1596008B4B4F /* Delay.swift in Sources */,
 				3F8341CF24A3368700DEE312 /* SubjectSelectCell.swift in Sources */,
 				3F8341C924A29AE500DEE312 /* GameModel.swift in Sources */,
 			);
@@ -538,6 +562,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JLL5AGNA27;
 				INFOPLIST_FILE = WordPuzzle/Info.plist;
@@ -547,6 +572,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = nbitton.WordPuzzle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -556,6 +582,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JLL5AGNA27;
 				INFOPLIST_FILE = WordPuzzle/Info.plist;
@@ -565,6 +592,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = nbitton.WordPuzzle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

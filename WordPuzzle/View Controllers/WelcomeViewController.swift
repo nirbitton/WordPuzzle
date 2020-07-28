@@ -17,12 +17,34 @@ protocol WelcomeViewControllerDelegate: class {
 
 class WelcomeViewController: UIViewController, Storyboarded {
 
+    @IBOutlet weak var counterView: UIView!
+    @IBOutlet weak var hintsCounterView: UIImageView!
+    @IBOutlet weak var hintsCounterLabel: UILabel!
+    
     var delegate: WelcomeViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setupViews()
+        setupBackButton()
+    }
+    
+    func setupViews() {
+        let numberOfHints = DBManager.getSavedHint()
+        guard numberOfHints > 0 else {
+            counterView.isHidden = true
+            return
+        }
+        
+        counterView.isHidden = false
+        hintsCounterView.addShadow()
+        hintsCounterLabel.text = "\(numberOfHints)"
+    }
+    
+    private func setupBackButton() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     @IBAction private func startAction(_ sender: Any) {

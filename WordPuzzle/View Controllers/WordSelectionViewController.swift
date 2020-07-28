@@ -9,7 +9,7 @@
 import UIKit
 
 protocol WordSelectionViewControllerDelegate: class {
-    func wordSelectionViewController(viewController: WordSelectionViewController, didSelectWord word: String)
+    func wordSelectionViewController(viewController: WordSelectionViewController, didSelectWord wordPosition: Int)
 }
 
 class WordSelectionViewController: UIViewController, Storyboarded {
@@ -22,6 +22,13 @@ class WordSelectionViewController: UIViewController, Storyboarded {
         super.viewDidLoad()
 
         setUpTableView()
+        setupBackButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
     }
     
     private func setUpTableView() {
@@ -29,19 +36,27 @@ class WordSelectionViewController: UIViewController, Storyboarded {
         tableView.delegate = self
         tableView.hideEmptyCells()
     }
+    
+    private func setupBackButton() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
 }
 
 extension WordSelectionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        gameModel?.words.count ?? 0
+        gameModel?.words[DBManager.savedSubject()].count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell() as SubjectSelectCell
+        let cell = tableView.dequeueReusableCell() as WordCell
         
-        let word = gameModel?.words[DBManager.getSavedLevel()][indexPath.row]
-        let iconString = gameModel?.allSubjects[DBManager.getSavedLevel()].icon
-        cell.configure(viewModel: SubjectSelectCell.ViewModel(title: word, icon: iconString))
+        let word = gameModel?.words[DBManager.savedSubject()][indexPath.row]
+        let iconString = gameModel?.wordIcon
+        cell.configure(viewModel: WordCell.ViewModel(title: word, icon: iconString, isLocked: DBManager.getSavedWord() <= indexPath.row))
+        if DBManager.getSavedWord() == indexPath.row {
+            cell.isUserInteractionEnabled = true
+        }
         
         return cell
     }
@@ -49,7 +64,6 @@ extension WordSelectionViewController: UITableViewDataSource {
 
 extension WordSelectionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DBManager.saveWord(word: indexPath.row)
-        delegate?.wordSelectionViewController(viewController: self, didSelectWord: gameModel?.words[DBManager.getSavedLevel()][indexPath.row] ?? "")
+        delegate?.wordSelectionViewController(viewController: self, didSelectWord: indexPath.row)
     }
 }

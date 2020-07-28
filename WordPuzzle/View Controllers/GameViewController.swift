@@ -17,6 +17,9 @@ class GameViewController: UIViewController, Storyboarded {
     @IBOutlet weak var selectedLetterThree: UILabel!
     @IBOutlet weak var selectedLetterFour: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var hintLabel: UILabel!
+    @IBOutlet var popup: Popup!
     
     // MARK: - Private properties
     
@@ -40,33 +43,51 @@ class GameViewController: UIViewController, Storyboarded {
         }
     }
     var words: [String] = []
-    var selectedWordPosition = 0
-    private var currentWordAsCharacters: [Character] = []
+    var selectedWordPosition = DBManager.getSavedWord()
+    var selectedSubject = DBManager.savedSubject()
+    var currentWordAsCharacters: [Character] = []
     var wordAsArray = Array<String>()
+    var selectedLetters = ""
+    var gameModel: GameModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(GameViewController.handleTap(_:)))
+        setupBackButton()
+        setupGesture()
+    }
+    
+    private func setupBackButton() {
+        navigationController?.navigationBar.tintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    private func setupGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(GameViewController.handleTap(_:)))
         longPressGesture.minimumPressDuration = 0.01
         collectionView.addGestureRecognizer(longPressGesture)
         collectionView.delegate = self
     }
     
-    @IBAction func handleTap(_ sender: UITapGestureRecognizer){
+    @IBAction func reloadAction(_ sender: Any) {
+        clearCells()
+        collectionView.reloadData()
+    }
+    
+    @IBAction func handleTap(_ sender: UILongPressGestureRecognizer){
         let state = sender.state
         let location = sender.location(in: self.collectionView)
         switch state {
         case .began:
             break
-        case .changed:
+        case .possible, .changed:
             if let indexPath: NSIndexPath = self.collectionView.indexPathForItem(at: location) as NSIndexPath?{
                 if let cell = self.collectionView.cellForItem(at: indexPath as IndexPath) as? LetterCell{
                     self.handleCellSelection(cell: cell)
                 }
             }
         case .ended:
-//            success()
+            handleTapEnd()
             clearCells()
 //            
 //            isSameTry = false
@@ -77,18 +98,40 @@ class GameViewController: UIViewController, Storyboarded {
 //        self.handleNumOfTries()
     }
     
+    @IBAction func moreHintsAction(_ sender: Any) {
+    }
+    
     func handleCellSelection(cell: LetterCell) {
         if !selectedCells.contains(cell) {
             selectedCells.append(cell)
             cell.setSelected(true)
+            selectedLetters += cell.titleLabel.text ?? ""
         } else if selectedCells.count > 1 &&
             cell.tag == selectedCells[selectedCells.endIndex-2].tag {
             let lastCell = selectedCells[selectedCells.endIndex-1]
             lastCell.setSelected(false)
             selectedCells.remove(at: selectedCells.endIndex-1)
+            selectedLetters.remove(at:selectedLetters.index(before: selectedLetters.endIndex))
         }
     }
-    
+
+    func handleTapEnd() {
+        guard selectedLetters == words[selectedWordPosition] else { return }
+
+        let pop = Popup()
+        view.addSubview(pop)
+        
+        delay(0.5) {
+            self.saveData()
+        }
+        
+        delay(0.9) {
+            self.clearCells()
+            self.collectionView.reloadData()
+        }
+        
+    }
+
     func clearCells(){
         selectedCells.forEach { cell in
             cell.setSelected(false)
@@ -98,6 +141,28 @@ class GameViewController: UIViewController, Storyboarded {
         selectedLetterTwo.text = ""
         selectedLetterThree.text = ""
         selectedLetterFour.text = ""
+        selectedLetters = ""
+    }
+    
+    func saveData() {
+        selectedWordPosition += 1
+        
+        if selectedWordPosition == words.count {
+            // next subject
+            if selectedSubject + 1 < gameModel?.words.count ?? 0 {
+                selectedSubject += 1
+            }
+            
+            guard let words = gameModel?.words[selectedSubject] else { return }
+            
+            self.words = words
+            selectedWordPosition = 0
+            DBManager.saveSubject(type: selectedSubject)
+            DBManager.saveWord(word: selectedWordPosition)
+        } else if DBManager.savedSubject() == selectedSubject, DBManager.getSavedWord() < selectedWordPosition {
+            DBManager.saveWord(word: selectedWordPosition)
+//            DBManager.saveScore(score: self.getTotalScore())
+        }
     }
 }
 

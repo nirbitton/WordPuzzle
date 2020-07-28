@@ -9,9 +9,10 @@
 import Foundation
 
 class DBManager: NSObject {
-    
+        
     static let SAVED_LEVEL = "SAVED_LEVEL"
     static let SAVED_WORD = "SAVED_WORD"
+    static let SAVED_SUBJECT = "SAVED_SUBJECT"
     static let NUM_OF_HINTS = "NUM_OF_HINTS"
     static let HINT_ALLREADY_SET = "HINT_ALLREADY_SET"
     static let SCORE = "SCORE"
@@ -25,15 +26,23 @@ class DBManager: NSObject {
     }
     
     static func getSavedLevel() -> Int {
-        return UserDefaults().integer(forKey: SAVED_LEVEL)
+        UserDefaults().integer(forKey: SAVED_LEVEL)
     }
     
-    static func saveWord(word:Int) {
+    static func saveWord(word: Int) {
         UserDefaults().set(word, forKey: SAVED_WORD)
     }
 
     static func getSavedWord() -> Int {
-        return UserDefaults().integer(forKey: SAVED_WORD)
+        UserDefaults().integer(forKey: SAVED_WORD)
+    }
+    
+    static func saveSubject(type: Int) {
+        UserDefaults().set(type, forKey: SAVED_SUBJECT)
+    }
+    
+    static func savedSubject() -> Int {
+        UserDefaults().integer(forKey: SAVED_SUBJECT)
     }
     
     static func addHint(hint:Int) {
