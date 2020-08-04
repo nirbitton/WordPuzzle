@@ -17,6 +17,7 @@ class WordSelectionViewController: UIViewController, Storyboarded {
     @IBOutlet weak var tableView: UITableView!
     weak var delegate: WordSelectionViewControllerDelegate?
     var gameModel: GameModel?
+    var selectedSubject = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,15 +46,21 @@ class WordSelectionViewController: UIViewController, Storyboarded {
 
 extension WordSelectionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        gameModel?.words[DBManager.savedSubject()].count ?? 0
+        gameModel?.words[selectedSubject].count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell() as WordCell
         
-        let word = gameModel?.words[DBManager.savedSubject()][indexPath.row]
+        let word = gameModel?.words[selectedSubject][indexPath.row]
         let iconString = gameModel?.wordIcon
-        cell.configure(viewModel: WordCell.ViewModel(title: word, icon: iconString, isLocked: DBManager.getSavedWord() <= indexPath.row))
+        var islocked = false
+        if DBManager.savedSubject() > selectedSubject {
+            islocked = false
+        } else if DBManager.savedSubject() == selectedSubject && DBManager.getSavedWord() <= indexPath.row {
+            islocked = true
+        }
+        cell.configure(viewModel: WordCell.ViewModel(title: word, icon: iconString, isLocked: islocked))
         if DBManager.getSavedWord() == indexPath.row {
             cell.isUserInteractionEnabled = true
         }

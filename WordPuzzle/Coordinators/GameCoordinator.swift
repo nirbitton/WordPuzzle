@@ -41,10 +41,11 @@ class GameCoordinator: Coordinator {
         navigationController.pushViewController(levelSelectionViewController, animated: false)
     }
 
-    func showWordSelectionViewController() {
+    func showWordSelectionViewController(selectedSubject: Int) {
         let wordSelectionViewController = WordSelectionViewController.instantiate()
         wordSelectionViewController.delegate = self
         wordSelectionViewController.gameModel = gameModel
+        wordSelectionViewController.selectedSubject = selectedSubject
         navigationController.pushViewController(wordSelectionViewController, animated: false)
     }
     
@@ -75,7 +76,7 @@ extension GameCoordinator: WelcomeViewControllerDelegate {
 
 extension GameCoordinator: SubjectSelectionViewControllerDelegate {
     func subjectSelectionViewController(viewController: SubjectSelectionViewController, didSelectSubject subject: GameModel.SubjectType) {
-        showWordSelectionViewController()
+        showWordSelectionViewController(selectedSubject: subject.rawValue)
     }
 }
 
