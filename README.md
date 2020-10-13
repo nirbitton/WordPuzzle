@@ -6,3 +6,13 @@ The main focus is:
 2. Test the user vocabulary 
 3. Clear the grid 
 4. Become smarter :)
+
+
+Features  
+Splash screen with animation 
+Game Difficulty selection 
+Level/subject selection 
+Letters grid with swipe and drag gestures with animations 
+Hints 
+Succeeded and try again screens  
+Level up screen 
