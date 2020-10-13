@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GameViewController.saveData():GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "selectedSubject">
+            </PersistentString>
+            <PersistentString
+               value = "selectedWordPosition">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GameViewController.setupTitile():GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "gameModel?.subject.name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GameViewController.getTotalScore():GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "numberOfTries">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GameViewController.setupHintButton():GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "DBManager.getSavedHint()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GameViewController.hintAction(_:):GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "selectedLetterOne.text">
+            </PersistentString>
+            <PersistentString
+               value = "selectedLetterOne.text?.isEmpty">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

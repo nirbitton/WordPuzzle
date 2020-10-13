@@ -30,9 +30,9 @@ class SubjectSelectCell: UITableViewCell {
         iconImageView.image = UIImage(named: viewModel.icon ?? "")
         if viewModel.isLocked {
             isUserInteractionEnabled = true
-            
             iconImageView.alpha = 0.9
         } else {
+            isUserInteractionEnabled = false
             iconImageView.alpha = 1.0
         }
     }

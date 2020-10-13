@@ -61,9 +61,12 @@ class Popup: UIView {
     @objc fileprivate func animateIn() {
         self.popup.transform = CGAffineTransform(translationX: 0, y: -self.frame.height)
         self.alpha = 1
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 00, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             self.popup.transform = .identity
             self.alpha = 1
+            delay(0.5) {
+                self.scorePointsLabel.text = String(DBManager.getScore())
+            }
         })
     }
 }

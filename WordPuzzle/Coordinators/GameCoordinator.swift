@@ -28,10 +28,18 @@ class GameCoordinator: Coordinator {
         navigationController.pushViewController(welcomeViewController, animated: false)
     }
 
-    func showSubjectSelectionViewController() {
+    func showSubjectSelectionViewController(level: Int) {
         let subjectSelectionViewController = SubjectSelectionViewController.instantiate()
         subjectSelectionViewController.delegate = self
         subjectSelectionViewController.gameModel = gameModel
+        switch level {
+        case 1:
+            subjectSelectionViewController.savedSubject = DBManager.easySavedSubject()
+        case 2:
+            subjectSelectionViewController.savedSubject = DBManager.savedSubject()
+        default:
+            subjectSelectionViewController.savedSubject = DBManager.hardSavedSubject()
+        }
         navigationController.pushViewController(subjectSelectionViewController, animated: false)
     }
 
@@ -52,15 +60,16 @@ class GameCoordinator: Coordinator {
     func showGameViewController(_ wordPosition: Int) {
         let gameViewController = GameViewController.instantiate()
         gameViewController.selectedWordPosition = wordPosition
-        gameViewController.words = gameModel.words[DBManager.savedSubject()]
+        gameViewController.words = gameModel.words[gameModel.subject.rawValue]
         gameViewController.gameModel = gameModel
+        gameViewController.selectedSubject = gameModel.subject.rawValue
         navigationController.pushViewController(gameViewController, animated: false)
     }
 }
 
 extension GameCoordinator: LevelSelectionViewControllerDelegate {
-    func levelSelectionViewController(controller: LevelSelectionViewController, didSelectLevel: Bool) {
-        showSubjectSelectionViewController()
+    func levelSelectionViewController(controller: LevelSelectionViewController, didSelectLevel level: Int) {
+        showSubjectSelectionViewController(level: level)
     }
 }
 

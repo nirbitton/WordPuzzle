@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LevelSelectionViewControllerDelegate: class {
-    func levelSelectionViewController(controller: LevelSelectionViewController, didSelectLevel: Bool)
+    func levelSelectionViewController(controller: LevelSelectionViewController, didSelectLevel level: Int)
 }
 class LevelSelectionViewController: UIViewController, Storyboarded {
 
@@ -28,14 +28,14 @@ class LevelSelectionViewController: UIViewController, Storyboarded {
 
     @IBAction func easyLevelAction(_ sender: Any) {
         DBManager.saveLevel(level: GameModel.Level.easy.rawValue)
-        delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
+        delegate?.levelSelectionViewController(controller: self, didSelectLevel: GameModel.Level.easy.rawValue)
     }
     @IBAction func mediumLevelAction(_ sender: Any) {
         DBManager.saveLevel(level: GameModel.Level.medium.rawValue)
-        delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
+        delegate?.levelSelectionViewController(controller: self, didSelectLevel: GameModel.Level.medium.rawValue)
     }
     @IBAction func hardLevelAction(_ sender: Any) {
         DBManager.saveLevel(level: GameModel.Level.hard.rawValue)
-        delegate?.levelSelectionViewController(controller: self, didSelectLevel: true)
+        delegate?.levelSelectionViewController(controller: self, didSelectLevel: GameModel.Level.hard.rawValue)
     }
 }

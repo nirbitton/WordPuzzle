@@ -17,6 +17,7 @@ class SubjectSelectionViewController: UIViewController, Storyboarded {
     @IBOutlet weak var tableView: UITableView!
     weak var delegate: SubjectSelectionViewControllerDelegate?
     var gameModel: GameModel?
+    var savedSubject = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +52,8 @@ extension SubjectSelectionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell() as SubjectSelectCell
         let subject = gameModel?.allSubjects[indexPath.row]
-        cell.configure(viewModel: SubjectSelectCell.ViewModel(title: subject?.name, icon: subject?.icon, isLocked: DBManager.getSavedLevel() < indexPath.row))
+        cell.configure(viewModel: SubjectSelectCell.ViewModel(title: subject?.name, icon: subject?.icon, isLocked: DBManager.savedSubject() < indexPath.row))
+        cell.isUserInteractionEnabled = DBManager.savedSubject() >= indexPath.row
         
         return cell
     }
@@ -59,6 +61,7 @@ extension SubjectSelectionViewController: UITableViewDataSource {
 
 extension SubjectSelectionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        gameModel?.subject = GameModel.SubjectType.all[indexPath.row]
         delegate?.subjectSelectionViewController(viewController: self, didSelectSubject: GameModel.SubjectType.all[indexPath.row])
     }
 }

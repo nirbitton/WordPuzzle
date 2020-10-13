@@ -13,6 +13,13 @@ class DBManager: NSObject {
     static let SAVED_LEVEL = "SAVED_LEVEL"
     static let SAVED_WORD = "SAVED_WORD"
     static let SAVED_SUBJECT = "SAVED_SUBJECT"
+    
+    static let EASY_SAVED_WORD = "EASY_SAVED_WORD"
+    static let EASY_SAVED_SUBJECT = "EASY_SAVED_SUBJECT"
+    
+    static let HARD_SAVED_WORD = "HARD_SAVED_WORD"
+    static let HARD_SAVED_SUBJECT = "HARD_SAVED_SUBJECT"
+    
     static let NUM_OF_HINTS = "NUM_OF_HINTS"
     static let HINT_ALLREADY_SET = "HINT_ALLREADY_SET"
     static let SCORE = "SCORE"
@@ -28,6 +35,26 @@ class DBManager: NSObject {
     static func getSavedLevel() -> Int {
         UserDefaults().integer(forKey: SAVED_LEVEL)
     }
+    
+    //MARK: - Easy levels
+    
+    static func easySaveWord(word: Int) {
+        UserDefaults().set(word, forKey: EASY_SAVED_WORD)
+    }
+
+    static func getEasySavedWord() -> Int {
+        UserDefaults().integer(forKey: EASY_SAVED_WORD)
+    }
+    
+    static func easySaveSubject(type: Int) {
+        UserDefaults().set(type, forKey: EASY_SAVED_SUBJECT)
+    }
+    
+    static func easySavedSubject() -> Int {
+        UserDefaults().integer(forKey: EASY_SAVED_SUBJECT)
+    }
+    
+    //MARK: - Advenced levels
     
     static func saveWord(word: Int) {
         UserDefaults().set(word, forKey: SAVED_WORD)
@@ -45,7 +72,28 @@ class DBManager: NSObject {
         UserDefaults().integer(forKey: SAVED_SUBJECT)
     }
     
-    static func addHint(hint:Int) {
+    
+    //MARK: - Hard levels
+    
+    
+    static func hardSaveWord(word: Int) {
+        UserDefaults().set(word, forKey: HARD_SAVED_WORD)
+    }
+
+    static func getHardSavedWord() -> Int {
+        UserDefaults().integer(forKey: HARD_SAVED_WORD)
+    }
+    
+    static func hardSaveSubject(type: Int) {
+        UserDefaults().set(type, forKey: HARD_SAVED_SUBJECT)
+    }
+    
+    static func hardSavedSubject() -> Int {
+        UserDefaults().integer(forKey: HARD_SAVED_SUBJECT)
+    }
+    
+    
+    static func addHint(hint: Int = 1) {
         let uDefault = UserDefaults()
         let hint2 = hint + uDefault.integer(forKey: NUM_OF_HINTS)
         uDefault.set(hint2, forKey: NUM_OF_HINTS)
@@ -63,13 +111,13 @@ class DBManager: NSObject {
         UserDefaults().set(true, forKey: HINT_ALLREADY_SET)
     }
     
-    static func saveScore(score:Int) {
+    static func saveScore(score: Int) {
         var curr = self.getScore()
         curr = curr + score
         UserDefaults().set(curr, forKey: SCORE)
     }
     
-    static func getScore() -> Int{
+    static func getScore() -> Int {
         return UserDefaults().integer(forKey: SCORE)
     }
 }

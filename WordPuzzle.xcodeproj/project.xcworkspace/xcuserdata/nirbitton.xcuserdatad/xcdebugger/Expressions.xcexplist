@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GameViewController.setupTitile():GameViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "GameViewController.saveData():GameViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "DBManager.savedSubject()">
+            </PersistentString>
+            <PersistentString
+               value = "DBManager.getSavedWord()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GameCoordinator.showGameViewController(_:):GameCoordinator.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "gameModel.words[gameModel.subject.rawValue]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

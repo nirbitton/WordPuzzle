@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMobileAds
 
 class GameViewController: UIViewController, Storyboarded {
 
@@ -19,7 +20,9 @@ class GameViewController: UIViewController, Storyboarded {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var hintLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var popup: Popup!
+    @IBOutlet weak var hintBtn: UIButton!
     
     // MARK: - Private properties
     
@@ -44,17 +47,24 @@ class GameViewController: UIViewController, Storyboarded {
     }
     var words: [String] = []
     var selectedWordPosition = DBManager.getSavedWord()
-    var selectedSubject = DBManager.savedSubject()
+    var selectedSubject = 0
     var currentWordAsCharacters: [Character] = []
     var wordAsArray = Array<String>()
     var selectedLetters = ""
-    var gameModel: GameModel?
+    var gameModel: GameModel!
+    var numberOfTries = 0
+    var isSameTry = false
+    
+    var rewardedAd: GADRewardedAd?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupBackButton()
         setupGesture()
+        setupHintButton()
+        setupTitile()
+        setupAdMob()
     }
     
     private func setupBackButton() {
@@ -69,17 +79,72 @@ class GameViewController: UIViewController, Storyboarded {
         collectionView.delegate = self
     }
     
+    private func setupHintButton() {
+        let numberOfHint = DBManager.getSavedHint()
+        hintLabel.text = "רמז" + "(" + String(numberOfHint) + ")!"
+        hintBtn.isEnabled = numberOfHint > 0
+    }
+    
+    private func setupTitile() {
+        titleLabel.text = gameModel?.subject.name
+    }
+    
+    private func setupAdMob() {
+        rewardedAd = createAndLoadRewardedAd()
+    }
+    
+    private func createAndLoadRewardedAd() -> GADRewardedAd? {
+      rewardedAd = GADRewardedAd(adUnitID: "ca-app-pub-3940256099942544/1712485313")
+      rewardedAd?.load(GADRequest()) { error in
+        if let error = error {
+          print("Loading failed: \(error)")
+        } else {
+          print("Loading Succeeded")
+        }
+      }
+      return rewardedAd
+    }
+    
     @IBAction func reloadAction(_ sender: Any) {
-        clearCells()
         collectionView.reloadData()
     }
     
-    @IBAction func handleTap(_ sender: UILongPressGestureRecognizer){
+    @IBAction func hintAction(_ sender: Any) {
+        guard DBManager.getSavedHint() > 0 else { return }
+        
+        DBManager.addHint(hint: -1)
+        setupHintButton()
+        
+        var arr: [Character] = []
+        let currentWord = words[selectedWordPosition] as String
+        if wordAsArray.count == 0 {
+            arr = Array(currentWord)
+        }
+        
+        if selectedLetterOne.text == nil || selectedLetterOne.text == "" {
+            let caf = arr[0]
+            selectedLetterOne.text = caf.description
+        }
+        else if selectedLetterTwo.text == nil || selectedLetterTwo.text == "" {
+            let caf = arr[1]
+            selectedLetterTwo.text = caf.description
+        }
+        else if selectedLetterThree.text == nil || selectedLetterThree.text == "" {
+            let caf = arr[2]
+            selectedLetterThree.text = caf.description
+        }
+        else if selectedLetterFour.text == nil || selectedLetterFour.text == "" {
+            let caf = arr[3]
+            selectedLetterFour.text = caf.description
+        }
+                
+        numberOfTries += 1
+    }
+    
+    @IBAction func handleTap(_ sender: UILongPressGestureRecognizer) {
         let state = sender.state
         let location = sender.location(in: self.collectionView)
         switch state {
-        case .began:
-            break
         case .possible, .changed:
             if let indexPath: NSIndexPath = self.collectionView.indexPathForItem(at: location) as NSIndexPath?{
                 if let cell = self.collectionView.cellForItem(at: indexPath as IndexPath) as? LetterCell{
@@ -89,16 +154,18 @@ class GameViewController: UIViewController, Storyboarded {
         case .ended:
             handleTapEnd()
             clearCells()
-//            
-//            isSameTry = false
-            break
+
+            isSameTry = false
         default:
             break
         }
-//        self.handleNumOfTries()
+        self.handleNumOfTries()
     }
     
     @IBAction func moreHintsAction(_ sender: Any) {
+        if rewardedAd?.isReady == true {
+           rewardedAd?.present(fromRootViewController: self, delegate: self)
+        }
     }
     
     func handleCellSelection(cell: LetterCell) {
@@ -123,16 +190,17 @@ class GameViewController: UIViewController, Storyboarded {
         
         delay(0.5) {
             self.saveData()
+            pop.scorePointsLabel.text = String(DBManager.getScore())
         }
         
         delay(0.9) {
             self.clearCells()
             self.collectionView.reloadData()
         }
-        
+        numberOfTries = 0
     }
 
-    func clearCells(){
+    func clearCells() {
         selectedCells.forEach { cell in
             cell.setSelected(false)
         }
@@ -151,6 +219,10 @@ class GameViewController: UIViewController, Storyboarded {
             // next subject
             if selectedSubject + 1 < gameModel?.words.count ?? 0 {
                 selectedSubject += 1
+                guard selectedSubject < gameModel.allSubjects.count else { return }
+                
+                gameModel?.subject = gameModel.allSubjects[selectedSubject]
+                titleLabel.text = gameModel?.allSubjects.first { $0.rawValue == selectedSubject }?.name
             }
             
             guard let words = gameModel?.words[selectedSubject] else { return }
@@ -159,9 +231,33 @@ class GameViewController: UIViewController, Storyboarded {
             selectedWordPosition = 0
             DBManager.saveSubject(type: selectedSubject)
             DBManager.saveWord(word: selectedWordPosition)
-        } else if DBManager.savedSubject() == selectedSubject, DBManager.getSavedWord() < selectedWordPosition {
+        } else if DBManager.savedSubject() == selectedSubject, DBManager.getSavedWord() <= selectedWordPosition {
             DBManager.saveWord(word: selectedWordPosition)
-//            DBManager.saveScore(score: self.getTotalScore())
+            DBManager.saveScore(score: self.getTotalScore())
+        }
+    }
+    
+    private func getTotalScore() ->Int {
+        if numberOfTries == 0 {
+            return 28
+        }
+        else if numberOfTries == 1 {
+            return 14
+        }
+        else if numberOfTries == 2 {
+            return 8
+        }
+        else {
+            return 4
+        }
+    }
+    
+    private func handleNumOfTries() {
+        // check number of tries
+        if selectedCells.count > 1 && !isSameTry
+        {
+            numberOfTries += 1
+            isSameTry = true
         }
     }
 }
@@ -191,5 +287,27 @@ extension GameViewController: UICollectionViewDelegate, UICollectionViewDelegate
             let itemHeight = collectionView.bounds.height / CGFloat(2)
 
         return CGSize(width: itemWidth, height: itemHeight)
+    }
+}
+
+extension GameViewController: GADRewardedAdDelegate {
+    /// Tells the delegate that the user earned a reward.
+    func rewardedAd(_ rewardedAd: GADRewardedAd, userDidEarn reward: GADAdReward) {
+        print("Reward received with currency: \(reward.type), amount \(reward.amount).")
+        DBManager.addHint()
+        setupHintButton()
+    }
+    /// Tells the delegate that the rewarded ad was presented.
+    func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
+        print("Rewarded ad presented.")
+    }
+    /// Tells the delegate that the rewarded ad was dismissed.
+    func rewardedAdDidDismiss(_ rewardedAd: GADRewardedAd) {
+        print("Rewarded ad dismissed.")
+        self.rewardedAd = createAndLoadRewardedAd()
+    }
+    /// Tells the delegate that the rewarded ad failed to present.
+    func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
+        print("Rewarded ad failed to present.")
     }
 }

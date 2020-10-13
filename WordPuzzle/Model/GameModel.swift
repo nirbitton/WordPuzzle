@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GoogleMobileAds
 
 class GameModel {
     enum Level: Int {
@@ -69,6 +70,7 @@ class GameModel {
 
     init() {
         initWords()
+        initHints()
     }
     
     private func initWords() {
@@ -91,5 +93,12 @@ class GameModel {
         words.append(countries)
         words.append(bible)
         words.append(professions)
+    }
+    
+    private func initHints() {
+        guard !DBManager.isHintAllreadySet() else { return }
+        
+        DBManager.setBooleanHintAsTrue()
+        DBManager.addHint(hint: 3)
     }
 }
